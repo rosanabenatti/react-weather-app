@@ -1,5 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSun,
+  faCloud,
+  faCloudRain,
+  faSnowflake,
+  faBolt,
+  faSmog,
+  faMoon,
+} from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [data, setData] = useState({});
@@ -17,19 +27,47 @@ function App() {
     }
   };
 
+  // Function to map weather description to Font Awesome icons
+  function getWeatherIcon(description) {
+    switch (description) {
+      case "Clouds":
+        return <FontAwesomeIcon icon={faCloud} />;
+      case "Clear":
+        return <FontAwesomeIcon icon={faSun} />;
+      case "Rain":
+        return <FontAwesomeIcon icon={faCloudRain} />;
+      case "Snow":
+        return <FontAwesomeIcon icon={faSnowflake} />;
+      case "Thunderstorm":
+        return <FontAwesomeIcon icon={faBolt} />;
+      case "Mist":
+      case "Smoke":
+      case "Haze":
+      case "Dust":
+      case "Fog":
+      case "Sand":
+      case "Ash":
+        return <FontAwesomeIcon icon={faSmog} />;
+      case "Night":
+        return <FontAwesomeIcon icon={faMoon} />;
+      default:
+        return null;
+    }
+  }
+
   return (
     <div className="app">
-      <div className="search">
-        <input
-          value={location}
-          onChange={(event) => setLocation(event.target.value)}
-          onKeyPress={searchLocation}
-          placeholder="Enter Location"
-          type="text"
-        />
-      </div>
       <div className="container">
         <div className="top">
+          <div className="search">
+            <input
+              value={location}
+              onChange={(event) => setLocation(event.target.value)}
+              onKeyPress={searchLocation}
+              placeholder="Enter Location"
+              type="text"
+            />
+          </div>
           <div className="location">
             <p>{data.name}</p>
           </div>
@@ -37,7 +75,11 @@ function App() {
             {data.main ? <h1>{data.main.temp.toFixed()}°C</h1> : null}
           </div>
           <div className="description">
-            {data.weather ? <p>{data.weather[0].main}</p> : null}
+            {data.weather ? (
+              <p>
+                {getWeatherIcon(data.weather[0].main)} {data.weather[0].main}
+              </p>
+            ) : null}
           </div>
         </div>
 
@@ -57,8 +99,7 @@ function App() {
               {data.wind ? (
                 <p className="bold">{data.wind.speed.toFixed()}km/h</p>
               ) : null}
-
-              <p>Wind Speed</p>
+              <p>Wind</p>
             </div>
           </div>
         )}
